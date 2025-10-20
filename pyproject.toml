@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools", "setuptools-scm"]
+requires = ["setuptools >= 77.0.3"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "PSGpy"
-version = "0.0.3"
+version = "0.1.0"
 authors = [
     {name = "Lorenzo Buriola", email = "lorenzo.buriola@unibo.it"},
 ]
