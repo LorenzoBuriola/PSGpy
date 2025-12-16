@@ -156,12 +156,16 @@ class atmosphere:
         self.aerosol_list.append(aer)
 
     def remove_gas(self, aname):
-        gg = gas(aname)
-        self.gas_list.remove(gg)
+        for gg in self.gas_list:
+            if gg.name == aname:
+                self.gas_list.remove(gg)
+                break
     
     def remove_aeros(self, aname):
-        aer = aeros(aname)
-        self.aerosol_list.remove(aer)
+        for aa in self.aerosol_list:
+            if aa.name == aname:
+                self.aerosol_list.remove(aa)
+                break
 
     def add_continuum(self, cont):
         self.continuum_list.append(cont)

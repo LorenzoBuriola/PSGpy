@@ -23,6 +23,34 @@ def read_out(file_path):
     table = pd.read_csv(file_path, delimiter="\\s+", names=header, comment='#', dtype='float64')
     return table
 
+def read_lyr(file_path, n_layers=55):
+    edges = pd.read_csv(
+        file_path,
+        header=None,
+        comment="#",
+        delimiter='\\s+',
+        nrows=n_layers+1,   # number of atmospheric layers
+        )
+    with open(file_path) as ifile:
+        lines = ifile.readlines()
+        start = None
+        for i, line in enumerate(lines):
+            if line.startswith('#  Layer'):
+                header_edges = line.strip().split()[1:]
+            if line.startswith('#   Low[km]'):
+                header_layers = line.strip().split()
+                start = i + 2
+                break
+    layers = pd.read_csv(
+        file_path,
+        header=None,
+        delimiter='\\s+',
+        skiprows=start,
+        nrows=n_layers)
+    edges.columns = header_edges
+    layers.columns = header_layers
+    return edges, layers
+
 def safe_log(x, eps=1e-323):
     result = np.where(x > eps, x, np.log(eps))     
     np.log(result, out=result, where=result > 0)     
