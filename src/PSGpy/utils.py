@@ -20,7 +20,6 @@ def read_out(file_path, flag_header = True):
         header = prevline
         # Strip line and remove '#' 
         header = header[1:].strip().split()
-        header = ['freq' if ee == 'Wave/freq' else ee for ee in header]
         table = pd.read_csv(file_path, delimiter="\\s+", names=header, comment='#', dtype='float64')
     else:
         table = pd.read_csv(file_path, delimiter="\\s+", header=None, comment='#', dtype='float64')
