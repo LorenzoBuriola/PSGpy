@@ -31,8 +31,8 @@ def run_psg(cfg_file, out_file = 'temp.txt',
     """
 
     # Check if type selected exists
-    type_list = ['rad', 'noi', 'trn', 'atm', 'str', 'tel', 'srf', 'cfg', 'ret', 'lyo', 'lyr', 'all']
-    if kind not in type_list:
+    kind_list = ['rad', 'noi', 'trn', 'atm', 'str', 'tel', 'srf', 'cfg', 'ret', 'lyo', 'lyr', 'all']
+    if kind not in kind_list:
         warn(f'{kind} is not a known type, output file will be empty!')
 
     # Check for wgeo
@@ -97,6 +97,10 @@ def run_psg_forw(ifile, ofile, w1, w2, dw,
             cfg_df['GENERATOR-RANGE2'] = ranges[i+1]
             cfg.dict_to_cfg(cfg_df, 'temp.txt')
             opath = os.path.join(tmpdir, f'psg_{kind}_freq{ranges[i]}_{ranges[i+1]}')
+            kind_list = ['rad', 'trn', 'atm', 'str', 'srf']
+            if kind not in kind_list:
+                warn(f'{kind} is not a known type, ERROR')
+                return
             run_psg(cfg_file='temp.txt', out_file=opath, 
                     kind = kind, wgeo = wgeo, wephm = wephm, watm = watm, whdr = whdr,
                     local = local, verbose = verbose,
