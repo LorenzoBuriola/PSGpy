@@ -99,11 +99,16 @@ def write_atm_layers(atm_df, cfg_dict):
     atm_df: DtaFrame - atmospehric layers
     cfg_dict: dictionary 
     """
+    old_n_layer = int(cfg_dict['ATMOSPHERE-LAYERS'])
     n_layer = atm_df.shape[0]
-    cfg_dict['ATMOSPHERE-LAYERS'] = n_layer
+    cfg_dict['ATMOSPHERE-LAYERS'] = str(n_layer)
     names = atm_df.columns
     cfg_dict['ATMOSPHERE-LAYERS-MOLECULES'] = ",".join(names[2:])
     for i in range(n_layer):
         cfg_dict[f'ATMOSPHERE-LAYER-{i+1}'] = ','.join(str(n) for n in atm_df.iloc[i,:].to_list())
+    if old_n_layer > n_layer:
+        for i in range(n_layer, old_n_layer):
+            del cfg_dict[f'ATMOSPHERE-LAYER-{i+1}']
+    
 
 

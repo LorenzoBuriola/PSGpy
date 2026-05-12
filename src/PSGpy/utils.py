@@ -5,22 +5,25 @@ import pandas as pd
 from datetime import datetime
 from scipy.constants import speed_of_light,Planck,Boltzmann
 
-def read_out(file_path):
-    # Read the lines in file
-    with open(file_path) as ifile:
-        bool = True
-        line = str()
-        while bool:
-            prevline = line
-            line = ifile.readline()
-            if not line.startswith('#'):
-                bool = False
-    # Last commented line is header
-    header = prevline
-    # Strip line and remove '#' 
-    header = header[1:].strip().split()
-    header = ['freq' if ee == 'Wave/freq' else ee for ee in header]
-    table = pd.read_csv(file_path, delimiter="\\s+", names=header, comment='#', dtype='float64')
+def read_out(file_path, flag_header = True):
+    if flag_header:
+        # Read the lines in file
+        with open(file_path) as ifile:
+            bool = True
+            line = str()
+            while bool:
+                prevline = line
+                line = ifile.readline()
+                if not line.startswith('#'):
+                    bool = False
+        # Last commented line is header
+        header = prevline
+        # Strip line and remove '#' 
+        header = header[1:].strip().split()
+        header = ['freq' if ee == 'Wave/freq' else ee for ee in header]
+        table = pd.read_csv(file_path, delimiter="\\s+", names=header, comment='#', dtype='float64')
+    else:
+        table = pd.read_csv(file_path, delimiter="\\s+", header=None, comment='#', dtype='float64')
     return table
 
 def read_lyr(file_path, n_layers=55):

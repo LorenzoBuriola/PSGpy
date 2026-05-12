@@ -20,6 +20,9 @@ molecular_metadata = {'H2O': 1, 'CO2': 2, 'O3': 3, 'N2O': 4, 'CO': 5,
                 'CS': 46, 'SO3': 47, 'C2N2': 48, 'COCl2': 49, 'SO': 50,
                 'CH3F': 51, 'GeH4': 52, 'CS2': 53, 'CH3I': 54, 'NF3': 55}
 
+# Aerosol types
+aerosol_types = {'Dust': 'Hexahydra_Wolff', 'Water_Ice': 'Warren_ice_HRI'}
+
 class gas:
     def __init__(self, name, abun = 1, unit = 'scl') -> None:
         """
@@ -50,7 +53,7 @@ class gas:
             return code
             
 class aeros:
-    def __init__(self, name, abun = 1, unit = 'scl', size = 1, sunit = 'scl', type='CRISM_Wolff') -> None:
+    def __init__(self, name, abun = 1, unit = 'scl', size = 1, sunit = 'scl') -> None:
         """
         Parameters
         ----------
@@ -65,7 +68,7 @@ class aeros:
         self.unit = unit
         self.size = str(size)
         self.sunit = sunit
-        self.type = type
+        self.type = aerosol_types.get(name, 'CRISM_Wolff')
     
     def __str__(self) -> str:
         return str([self.name, self.abun, self.unit, self.size, self.sunit, self.type])
@@ -105,7 +108,7 @@ class atmosphere:
             asunit = cfg['ATMOSPHERE-ASUNI'].split(',')
             atype = cfg['ATMOSPHERE-ATYPE'].split(',')
             for aa,unit,abun,size,size_unit,type in zip(alist,aunit,aabun,asize,asunit,atype):
-                self.aerosol_list.append(aeros(name=aa, abun=abun, unit=unit, size=size, sunit=size_unit,type=type))
+                self.aerosol_list.append(aeros(name=aa, abun=abun, unit=unit, size=size, sunit=size_unit))
 
         if 'ATMOSPHERE-CONTINUUM' in cfg.keys():
             self.continuum_list = cfg['ATMOSPHERE-CONTINUUM'].split(',')     
@@ -152,7 +155,7 @@ class atmosphere:
         self.gas_list.append(gg)
     
     def add_aeros(self, aname, aabun=1, aunit='scl', size = 1, sunit='scl', type='CRISM_Wolff') -> None:
-        aer = aeros(aname, aabun, aunit, size, sunit, type)
+        aer = aeros(aname, aabun, aunit, size, sunit)
         self.aerosol_list.append(aer)
 
     def remove_gas(self, aname):
