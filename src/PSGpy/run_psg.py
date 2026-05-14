@@ -107,5 +107,5 @@ def run_psg_forw(ifile, ofile, w1, w2, dw,
                     docker_socket = docker_socket)
             temp_files.append(opath)
         rad = pd.concat((read_out(file).iloc[:int(40/dw)]  for file in temp_files), ignore_index= True)
-        rad.sort_values(by='freq', ignore_index=True, inplace=True)
+        rad.sort_values(by='Wave/freq', ignore_index=True, inplace=True)
         rad.to_csv(ofile, index=False)
