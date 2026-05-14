@@ -53,7 +53,7 @@ def run_psg(cfg_file, out_file = 'temp.txt',
         warn(f'{whdr} is not a known type, output file will be empty!')
         
     data = {
-        'type': type,
+        'type': kind,
         'wgeo' : wgeo,
         'wephm' : wephm,
         'watm' : watm,
@@ -71,7 +71,7 @@ def run_psg(cfg_file, out_file = 'temp.txt',
     response = post(url, data=data)                 
     if verbose == True:
         print(f'PSG is running at {url}')
-        print(f'type = {type}')
+        print(f'type = {kind}')
         print(f'Input file: {cfg_file}')
         print(f'Output file: {out_file}')
     # write to output file
