@@ -10,9 +10,6 @@ import re
 import json
 import os
 
-from PSGpy.run_psg import run_psg
-from PSGpy.utils import name_file
-
 def read_cfg(file_path):
     """
     It reads the configuration fil and return a pyhton dictionary

@@ -3,10 +3,6 @@
 # PSGpy - atm_obj.py
 # Atmospheric classes
 # *******************************************************
-
-import pandas as pd
-from warnings import warn
-
 # Molecular codes
 molecular_metadata = {'H2O': 1, 'CO2': 2, 'O3': 3, 'N2O': 4, 'CO': 5,
                 'CH4': 6, 'O2': 7, 'NO': 8, 'SO2': 9, 'NO2': 10,
