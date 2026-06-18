@@ -31,7 +31,7 @@ def run_psg(cfg_file, out_file = 'temp.txt',
     """
 
     # Check if type selected exists
-    kind_list = ['rad', 'noi', 'trn', 'atm', 'str', 'tel', 'srf', 'cfg', 'ret', 'lyo', 'lyr', 'all']
+    kind_list = ['rad', 'noi', 'trn', 'atm', 'str', 'tel', 'srf', 'cfg', 'ret', 'lyo', 'lyr', 'lyc', 'all']
     if kind not in kind_list:
         warn(f'{kind} is not a known type, output file will be empty!')
 
