@@ -16,8 +16,7 @@ from PSGpy.utils import read_out
 
 def run_psg(cfg_file, out_file = 'temp.txt', 
             kind = 'rad', wgeo = 'y', wephm = 'n', watm = 'n', whdr = 'y',
-            local = True, verbose = True,
-            docker_socket = 'unix:///run/user/1007/docker.sock'):
+            local = True, verbose = True):
     """
     It runs PSG requesting to http
 
@@ -63,7 +62,7 @@ def run_psg(cfg_file, out_file = 'temp.txt',
     if local == True:
         url = 'http://localhost:3000/api.php'
         # Check if PSG is running locally
-        if not docker_utils.is_container_running('psg', url=docker_socket):
+        if not docker_utils.is_container_running('psg'):
             raise Exception('Container psg is not running, please start container or select local=False')
     else:
         url = 'https://psg.gsfc.nasa.gov/api.php'
@@ -95,16 +94,16 @@ def run_psg_forw(ifile, ofile, w1, w2, dw,
                 print(f"Running PSG for range {ranges[i]}-{ranges[i+1]} cm-1")
             cfg_df['GENERATOR-RANGE1'] = ranges[i]
             cfg_df['GENERATOR-RANGE2'] = ranges[i+1]
-            cfg.dict_to_cfg(cfg_df, 'temp.txt')
+            path_cfg = os.path.join(tmpdir, 'cfg_temp.txt')
+            cfg.dict_to_cfg(cfg_df, path_cfg)
             opath = os.path.join(tmpdir, f'psg_{kind}_freq{ranges[i]}_{ranges[i+1]}')
             kind_list = ['rad', 'trn', 'atm', 'str', 'srf']
             if kind not in kind_list:
                 warn(f'{kind} is not a known type, ERROR')
                 return
-            run_psg(cfg_file='temp.txt', out_file=opath, 
+            run_psg(cfg_file=path_cfg, out_file=opath, 
                     kind = kind, wgeo = wgeo, wephm = wephm, watm = watm, whdr = whdr,
-                    local = local, verbose = verbose,
-                    docker_socket = docker_socket)
+                    local = local, verbose = verbose)
             temp_files.append(opath)
         rad = pd.concat((read_out(file).iloc[:int(40/dw)]  for file in temp_files), ignore_index= True)
         rad.sort_values(by='Wave/freq', ignore_index=True, inplace=True)

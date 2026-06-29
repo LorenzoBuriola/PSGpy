@@ -6,9 +6,11 @@
 # *******************************************************
 
 import docker
+import os
 from docker.errors import NotFound, APIError
+from pathlib import Path
 
-def is_container_running(name, url):
+def is_container_running(name):
     """
     Check if a Docker container is running
     
@@ -17,7 +19,8 @@ def is_container_running(name, url):
     name: string - name of the container
     url: string - url of the container
     """
-    docker_client = docker.DockerClient(base_url=url)
+    socket = get_docker_socket()
+    docker_client = docker.DockerClient(base_url=socket)
     try:
         container = docker_client.containers.get(name)
     except NotFound as exc:
@@ -51,3 +54,18 @@ def stop_container(name, url) -> None:
     """
     docker_client = docker.DockerClient(base_url=url)
     docker_client.containers.get(name).stop()
+
+def get_docker_socket():
+    candidates = [
+        os.environ.get("DOCKER_HOST"),  # best case
+        f"unix:///run/user/{os.getuid()}/docker.sock",
+        "unix:///var/run/docker.sock",
+    ]
+
+    for sock in candidates:
+        if not sock:
+            continue
+        path = sock.replace("unix://", "")
+        if Path(path).exists():
+            return sock
+    raise RuntimeError("Docker socket not found")
